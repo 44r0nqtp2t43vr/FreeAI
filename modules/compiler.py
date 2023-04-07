@@ -1,8 +1,3 @@
-import random
-random.seed(9999)
-
-id_list = list(range(10000, 99999))
-
 lexicon_dict = {
     'int': ['int'],
     'var_name': ['x', 'y', 'my_var'],
@@ -65,11 +60,13 @@ grammar_dict = {
     'statement_block': [['{', 'statement_list', '}'], ['{', '}']],
 }
 
+row_id = 0
+
 class EarleyRow:
-    def __init__(self, pid, chart, operator, start, end, symbol, production):
-        eid = id_list[random.randint(0, len(id_list) - 1)]
-        id_list.remove(eid)
-        self.eid = eid
+    def __init__(self, pid, chart, operator, start, end, symbol, production, cid = None):
+        global row_id
+        self.id = row_id
+        row_id = row_id + 1
         self.pid = pid
         self.chart = chart
         self.operator = operator
@@ -77,9 +74,10 @@ class EarleyRow:
         self.end = end
         self.symbol = symbol
         self.production = production
+        self.cid = cid
     
     def print_row(self):
-        print(self.chart, self.eid, self.pid, self.operator, self.start, self.end, self.symbol, self.production)
+        print(self.chart, self.id, self.pid, self.operator, self.start, self.end, self.symbol, self.production, self.cid)
 
 class EarleyParser:
     def __init__(self, lexicon, grammar):
@@ -87,6 +85,7 @@ class EarleyParser:
         self.grammar = grammar
         self.terminals = [key for key in lexicon]
         self.nonterminals = [key for key in grammar]
+        self.parsed = []
 
     def shift_dot(self, prod):
         if '*' in prod:
@@ -98,7 +97,7 @@ class EarleyParser:
     def predict(self, earley_row):
         prod = getattr(earley_row, 'production')
         for child_prod in self.grammar[prod[prod.index('*') + 1]]:
-            pid = getattr(earley_row, 'eid')
+            pid = getattr(earley_row, 'id') # parent id
             chart = getattr(earley_row, 'chart')
             end = getattr(earley_row, 'end')
             symbol = prod[prod.index('*') + 1]
@@ -112,7 +111,7 @@ class EarleyParser:
     def scan(self, earley_row, word):
         prod = getattr(earley_row, 'production')
         if word in self.lexicon[prod[prod.index('*') + 1]]:
-            pid = getattr(earley_row, 'eid')
+            pid = getattr(earley_row, 'id')
             chart = getattr(earley_row, 'chart') + 1
             start = getattr(earley_row, 'start')
             end = getattr(earley_row, 'end') + 1
@@ -125,22 +124,28 @@ class EarleyParser:
         comp_symbol = getattr(comp_row, 'symbol')
         comp_prod = getattr(comp_row, 'production')
         while comp_symbol != 'S' and comp_prod[-1] == '*':
+            last_cid = getattr(to_comp_row, 'cid')
+            if last_cid != None:
+                cid = [getattr(comp_row, 'id')] + last_cid
+            else:
+                cid = [getattr(comp_row, 'id')] + [last_cid]
             pid = getattr(to_comp_row, 'pid')
             chart = getattr(comp_row, 'chart')
-            start = getattr(comp_row, 'start')
+            start = getattr(to_comp_row, 'start')
             end = getattr(comp_row, 'end')
             symbol = getattr(to_comp_row, 'symbol')
             prod = getattr(to_comp_row, 'production').copy()
-            comp_row = EarleyRow(pid, chart, 'COMP', start, end, symbol, self.shift_dot(prod))
+            comp_row = EarleyRow(pid, chart, 'COMP', start, end, symbol, self.shift_dot(prod), cid)
             self.table.append(comp_row)
             comp_symbol = getattr(comp_row, 'symbol')
             comp_prod = getattr(comp_row, 'production')
-            to_comp_row = ([row for row in self.table if row.eid == pid])[0]
+            to_comp_row = ([row for row in self.table if row.id == pid])[0]
             
     
     def parse(self, sentence):
         sentence = sentence.split()
-        self.table = [EarleyRow(999, 0, 'PRED', 0, 0, 'y', ['*', 'S'])]
+        self.tokens = sentence
+        self.table = [EarleyRow(0, 0, 'PRED', 0, 0, 'y', ['*', 'S'])]
         self.predict(self.table[0])
         for index, word in enumerate(sentence):
             to_scan = [er for er in self.table if getattr(er, 'chart') == index and (getattr(er, 'production')[-1] != '*' and getattr(er, 'production')[getattr(er, 'production').index('*') + 1] in self.terminals)]
@@ -156,11 +161,50 @@ class EarleyParser:
                         self.predict(self.table[-1])
         # for row in self.table:
         #     row.print_row()
-        global id_list
-        id_list = list(range(10000, 99999))
         if getattr(self.table[-1], 'symbol') == 'S' and getattr(self.table[-1], 'production')[-1] == '*':
+            self.get_parsed()
+            self.get_parsed_symbols()
+            self.get_statement_type()
+            self.get_tags_list()
             return True
         return False
+    
+    def get_parsed(self, to_get = None):
+        if self.table == None:
+            return
+        if to_get == None:
+            to_get = self.table[-1]
+        to_get_cid = getattr(to_get, 'cid')
+        if to_get_cid == None:
+            self.parsed.append(to_get)
+            # to_get.print_row()
+            return
+        for cid in to_get_cid:
+            if cid == None:
+                self.parsed.append(to_get)
+                # to_get.print_row()
+                return
+            next_row = ([row for row in self.table if getattr(row, 'id') == cid])[0]
+            self.get_parsed(next_row)
+    
+    def get_parsed_symbols(self):
+        self.parsed_symbols = [getattr(row, 'symbol') for row in self.parsed]
+        self.parsed_symbols.reverse()
+        return self.parsed_symbols
+    
+    def get_statement_type(self):
+        statement_types = [item for sublist in self.grammar['statement'] for item in sublist]
+        for symbol in self.get_parsed_symbols():
+            if symbol in statement_types:
+                self.statement_type = symbol
+                return
+    
+    def get_tags_list(self):
+        tags_list = []
+        parsed_symbols_terminals = [symbol for symbol in self.parsed_symbols if symbol in self.terminals]
+        for index, token in enumerate(self.tokens):
+            tags_list.append((token, parsed_symbols_terminals[index]))
+        self.tags_list = tags_list
     
 # parser = EarleyParser(lexicon_dict, grammar_dict)
 # print(parser.parse('int my_int = 0 ;'))

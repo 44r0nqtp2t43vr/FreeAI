@@ -11,7 +11,15 @@ def compile(code):
         code = code.replace(pair[0], pair[1])
     parser = comp.EarleyParser(comp.lexicon_dict, comp.grammar_dict)
     print(code)
-    return parser.parse(code.strip())
+    is_syn_correct = parser.parse(code.strip())
+    if is_syn_correct == False:
+        return None
+    response = {
+        'is_syn_correct': is_syn_correct,
+        'statement_type': getattr(parser, 'statement_type'),
+        'tags_list': getattr(parser, 'tags_list'),
+    }
+    return response
 
 class TextInputBox(pygame.sprite.Sprite):
     def __init__(self, x, y, w, h, font):
@@ -132,7 +140,8 @@ while running:
 
     # RENDER YOUR GAME HERE
     panel_group.draw(screen)
-    if getattr(run_button, 'res'):
+    run_button_response = getattr(run_button, 'res')
+    if run_button_response and run_button_response['is_syn_correct'] == True:
         pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(30, 30, 60, 60))
     else: 
         pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(30, 30, 60, 60))
