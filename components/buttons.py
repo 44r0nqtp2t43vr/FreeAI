@@ -48,3 +48,21 @@ class HomeButton(Button):
                 if self.rect.collidepoint(mouse_pos):
                     self.is_clicked = True
                     self.render_button()
+
+class RunButton(Button):
+    def __init__(self, x, y, width, height, font, text, color):
+        super().__init__(x, y, width, height, font, text, color)
+
+    def render_button(self):
+        text_surface = self.font.render(self.text, True, self.color)
+        self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        self.image.blit(text_surface, text_surface.get_rect(center=(self.width/2, self.height/2)))
+        self.rect = self.image.get_rect(center = self.pos)
+        pygame.draw.rect(self.image, self.color, self.image.get_rect(), 2)
+    
+    def update(self, event_list):
+        for event in event_list:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if self.rect.collidepoint(mouse_pos):
+                    self.render_button()

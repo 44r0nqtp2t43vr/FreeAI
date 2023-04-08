@@ -2,7 +2,10 @@
 import pygame
 import modules.compiler as comp
 
-import screens.home_screen as hscr
+import components.bottom_panel as btpnl
+
+import screens.home_screen as hmscr
+import screens.level_0_screen as l0scr
 
 def compile(code):
     if code.strip() == '':
@@ -122,8 +125,10 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('FreeAI')
 clock = pygame.time.Clock()
 
-# import screens
-home_screen = hscr.HomeScreen(screen)
+# import screens & components
+home_screen = hmscr.HomeScreen(screen)
+lvl0_screen = l0scr.Level0Screen(screen)
+bottom_panel = btpnl.BottomPanel(screen)
 
 # home group
 home_group = getattr(home_screen, 'home_group')
@@ -136,7 +141,7 @@ text_input_box = TextInputBox(0, 480, 960, 240, font)
 panel_group = pygame.sprite.Group(text_input_box, run_button)
 
 running = True
-screen_name = 'home'
+screen_name = 'level_0'
 
 while running:
     # poll for events
@@ -145,9 +150,10 @@ while running:
     for event in event_list:
         if event.type == pygame.QUIT:
             running = False
-    home_group.update(event_list)
-    panel_group.update(event_list)
-    run_button.listen_code(getattr(text_input_box, 'text'))
+    if screen_name == 'home':
+        home_group.update(event_list)
+    # panel_group.update(event_list)
+    # run_button.listen_code(getattr(text_input_box, 'text'))
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("gray")
@@ -159,12 +165,14 @@ while running:
             setattr(home_story_button, 'is_clicked', False)
             screen_name = 'level_0'
     elif screen_name == 'level_0':
-        panel_group.draw(screen)
-        run_button_response = getattr(run_button, 'res')
-        if run_button_response and run_button_response['is_syn_correct'] == True:
-            pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(30, 30, 60, 60))
-        else: 
-            pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(30, 30, 60, 60))
+        lvl0_screen.displayLevel0Screen()
+        bottom_panel.displayBottomPanel()
+    # panel_group.draw(screen)
+    # run_button_response = getattr(run_button, 'res')
+    # if run_button_response and run_button_response['is_syn_correct'] == True:
+    #     pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(30, 30, 60, 60))
+    # else: 
+    #     pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(30, 30, 60, 60))
 
     # flip() the display to put your work on screen
     pygame.display.flip()
