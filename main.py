@@ -2,6 +2,8 @@
 import pygame
 import modules.compiler as comp
 
+import screens.home_screen as hscr
+
 def compile(code):
     if code.strip() == '':
         return False
@@ -114,16 +116,27 @@ class RunButton(Button):
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen_width = 1280
+screen_height = 720
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption('FreeAI')
 clock = pygame.time.Clock()
 
-font = pygame.font.SysFont(None, 60)
+# import screens
+home_screen = hscr.HomeScreen(screen)
 
+# home group
+home_group = getattr(home_screen, 'home_group')
+home_story_button = getattr(home_screen, 'story_button')
+
+# panel button group
+font = pygame.font.SysFont(None, 60)
 run_button = RunButton(960, 480, 320, 240, font, "Run")
 text_input_box = TextInputBox(0, 480, 960, 240, font)
 panel_group = pygame.sprite.Group(text_input_box, run_button)
 
 running = True
+screen_name = 'home'
 
 while running:
     # poll for events
@@ -132,6 +145,7 @@ while running:
     for event in event_list:
         if event.type == pygame.QUIT:
             running = False
+    home_group.update(event_list)
     panel_group.update(event_list)
     run_button.listen_code(getattr(text_input_box, 'text'))
 
@@ -139,12 +153,18 @@ while running:
     screen.fill("gray")
 
     # RENDER YOUR GAME HERE
-    panel_group.draw(screen)
-    run_button_response = getattr(run_button, 'res')
-    if run_button_response and run_button_response['is_syn_correct'] == True:
-        pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(30, 30, 60, 60))
-    else: 
-        pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(30, 30, 60, 60))
+    if screen_name == 'home':
+        home_screen.displayHomeScreen()
+        if getattr(home_story_button, 'is_clicked') == True:
+            setattr(home_story_button, 'is_clicked', False)
+            screen_name = 'level_0'
+    elif screen_name == 'level_0':
+        panel_group.draw(screen)
+        run_button_response = getattr(run_button, 'res')
+        if run_button_response and run_button_response['is_syn_correct'] == True:
+            pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(30, 30, 60, 60))
+        else: 
+            pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(30, 30, 60, 60))
 
     # flip() the display to put your work on screen
     pygame.display.flip()
