@@ -208,3 +208,20 @@ class EarleyParser:
     
 # parser = EarleyParser(lexicon_dict, grammar_dict)
 # print(parser.parse('int my_int = 0 ;'))
+def compile(code):
+    if code.strip() == '':
+        return None
+    preprocess_list = [['\n', ' '], ['\t', ' '], ['=', ' = '], [';', ' ; '], ['(', ' ( '], [')', ' ) '], ['{', ' { '], ['}', ' } '], ['+', ' + '], 
+                       ['-', ' - '], ['*', ' * '], ['/', ' / '], ['%', ' % '], ['>', ' > '], ['<', ' < '], ['!', ' ! '] , [':', ' : ']]
+    for pair in preprocess_list:
+        code = code.replace(pair[0], pair[1])
+    parser = EarleyParser(lexicon_dict, grammar_dict)
+    print(code)
+    is_syn_correct = parser.parse(code.strip())
+    if is_syn_correct == False:
+        return None
+    response = {
+        'statement_type': getattr(parser, 'statement_type'),
+        'tags_list': getattr(parser, 'tags_list'),
+    }
+    return response

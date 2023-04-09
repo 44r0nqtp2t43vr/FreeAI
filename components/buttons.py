@@ -1,4 +1,5 @@
 import pygame
+import modules.compiler as comp
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, font, text, color):
@@ -52,17 +53,23 @@ class HomeButton(Button):
 class RunButton(Button):
     def __init__(self, x, y, width, height, font, text, color):
         super().__init__(x, y, width, height, font, text, color)
+        self.res = None
 
     def render_button(self):
         text_surface = self.font.render(self.text, True, self.color)
         self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        self.image.blit(text_surface, text_surface.get_rect(center=(self.width/2, self.height/2)))
+        self.image.blit(text_surface, text_surface.get_rect(center=(self.width//2+4, self.height//2)))
         self.rect = self.image.get_rect(center = self.pos)
-        pygame.draw.rect(self.image, self.color, self.image.get_rect(), 2)
+        # pygame.draw.rect(self.image, self.color, self.image.get_rect(), 2)
+
+    def listen_code(self, code):
+        self.code = code
     
     def update(self, event_list):
+        def collidepoint(mouse_pos):
+            return (mouse_pos[0] >= self.pos[0] - (self.screen_width//8)//2 and mouse_pos[0] <= self.pos[0] + (self.screen_width//8)//2) and (mouse_pos[1] >= (self.screen_height//3)*2 + self.pos[1] - self.width//2 and mouse_pos[1] <= (self.screen_height//3)*2 + self.pos[1] + self.width//2)
         for event in event_list:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if self.rect.collidepoint(mouse_pos):
-                    self.render_button()
+                if collidepoint(mouse_pos):
+                    self.res = comp.compile(self.code)
