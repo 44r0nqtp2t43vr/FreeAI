@@ -12,7 +12,7 @@ class TextInput(pygame.sprite.Sprite):
         self.height = h
         self.font = font
         self.active = False
-        self.text = ""
+        self.text = 'proceed();'
         self.render_text()
 
     def render_text(self):
@@ -35,7 +35,6 @@ class TextInput(pygame.sprite.Sprite):
         for event in event_list:
             # if event.type == pygame.MOUSEBUTTONDOWN and not self.active:
             #     self.active = self.rect.collidepoint(event.pos)
-            self.active = True
             if event.type == pygame.KEYDOWN and self.active:
                 if event.key == pygame.K_RETURN:
                     # self.active = False
@@ -46,4 +45,4 @@ class TextInput(pygame.sprite.Sprite):
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
-                self.render_text()
+        self.render_text()

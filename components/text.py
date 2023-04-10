@@ -45,7 +45,7 @@ class MultilineText(Text):
     def render_text(self):
         self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.rect = self.image.get_rect(center = self.pos)
-        if self.text.strip() == '':
+        if self.text == None or self.text.strip() == '':
             return
         self.text = self.wrap_text(self.text)
         rendered_text = []

@@ -62,8 +62,10 @@ class RunButton(Button):
         self.rect = self.image.get_rect(center = self.pos)
         # pygame.draw.rect(self.image, self.color, self.image.get_rect(), 2)
 
-    def listen_code(self, code):
+    def listen(self, code, screen_name, script_index):
         self.code = code
+        self.screen_name = screen_name,
+        self.script_index = script_index,
     
     def update(self, event_list):
         def collidepoint(mouse_pos):
@@ -72,4 +74,4 @@ class RunButton(Button):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if collidepoint(mouse_pos):
-                    self.res = comp.compile(self.code)
+                    self.res = comp.compile(self.code, self.screen_name[0], self.script_index[0])

@@ -1,6 +1,9 @@
+import modules.validators as validator
+
 lexicon_dict = {
     'int': ['int'],
-    'var_name': ['x', 'y', 'my_var'],
+    'var_name': ['repaircode'],
+    'function_name': ['proceed'],
     'number': [str(num) for num in range(1000)],
     'operator_ari': ['+', '-', '*', '/', '%'],
     'operator_glt': ['>', '<'],
@@ -29,7 +32,7 @@ lexicon_dict = {
 grammar_dict = {
     'S': [['statement_list']],
     'statement_list': [['statement'], ['statement', 'statement_list']],
-    'statement': [['assignment'], ['conditional'], ['loop']],
+    'statement': [['assignment'], ['conditional'], ['loop'], ['function_call']],
     'assignment': [['int_ass']],
     'conditional': [['cond_if'], ['cond_switch']],
     'loop': [['loop_while'], ['loop_do_while'], ['loop_for']],
@@ -58,6 +61,7 @@ grammar_dict = {
     'default_block': [['default', ':', 'statement_list'], ['default', ':', 'statement_list', 'break', ';']],
     'condition_block': [['(', 'condition_list', ')']],
     'statement_block': [['{', 'statement_list', '}'], ['{', '}']],
+    'function_call': [['function_name', '(', ')', ';']],
 }
 
 row_id = 0
@@ -208,20 +212,31 @@ class EarleyParser:
     
 # parser = EarleyParser(lexicon_dict, grammar_dict)
 # print(parser.parse('int my_int = 0 ;'))
-def compile(code):
+
+lvl0_to_validate = [4, 5, 6, 19, 20, 21, 27]
+
+def compile(code, screen_name, script_index):
     if code.strip() == '':
-        return None
+        return {'is_valid': False}
     preprocess_list = [['\n', ' '], ['\t', ' '], ['=', ' = '], [';', ' ; '], ['(', ' ( '], [')', ' ) '], ['{', ' { '], ['}', ' } '], ['+', ' + '], 
                        ['-', ' - '], ['*', ' * '], ['/', ' / '], ['%', ' % '], ['>', ' > '], ['<', ' < '], ['!', ' ! '] , [':', ' : ']]
     for pair in preprocess_list:
         code = code.replace(pair[0], pair[1])
     parser = EarleyParser(lexicon_dict, grammar_dict)
-    print(code)
+    print(code, screen_name, script_index)
     is_syn_correct = parser.parse(code.strip())
     if is_syn_correct == False:
-        return None
+        return {'is_valid': False}
+    statement_type = getattr(parser, 'statement_type')
+    tags_list = getattr(parser, 'tags_list')
+    if screen_name == 'level_0' and script_index in lvl0_to_validate:
+        if script_index == 4:
+            is_valid = validator.validate_L0_04(statement_type, tags_list)
+        if is_valid == False:
+            return {'is_valid': False}
     response = {
-        'statement_type': getattr(parser, 'statement_type'),
-        'tags_list': getattr(parser, 'tags_list'),
+        'is_valid': True,
+        'statement_type': statement_type,
+        'tags_list': tags_list,
     }
     return response

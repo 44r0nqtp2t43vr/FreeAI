@@ -10,7 +10,7 @@ class BottomPanel():
         self.screen_width = 1280
         self.screen_height = 720
         self.lives = lives
-        self.prompt = ''
+        self.prompt = None
 
         # import images
         self.bpanel_bg = pygame.image.load('assets/images/bg_bpanel.png').convert()
@@ -40,8 +40,10 @@ class BottomPanel():
         self.lives = lives
         self.prompt = prompt
 
+        prompt_line = prompt['line']
+
         prompt_text_font = pygame.font.Font('assets/fonts/KenneyMiniSquareMono.ttf', 12)
-        prompt_text = text.MultilineText((self.screen_width//8)*3, ((self.screen_height//3)//8)*5, 320, 180, prompt_text_font, self.prompt, (30, 167, 225))
+        prompt_text = text.MultilineText((self.screen_width//8)*3, ((self.screen_height//3)//8)*5, 320, 180, prompt_text_font, prompt_line, (30, 167, 225))
         avatars = []
         for i in range(lives):
             if i < 5:
