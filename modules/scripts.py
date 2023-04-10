@@ -112,3 +112,90 @@ lvl0_script = [
         'line': 'To complete this level, initialize an integer variable called freeai with any value.'
     },
 ]
+
+lvl1_script = [
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: So this is how it is when we combine? Cool! [In the universe, humans like you can only walk around through AI, as we are the only ones with movement functions]. '
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: Pretty sure humans back then didn’t need that back in.. Wait, what year is it now? [It’s 7E7] '
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: Wha... [Base 10 numerals are no longer adequate for measuring time in years, so base 16 is used instead.] It’s been that long??'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: Anyway, lets walk around and learn things for now [Just be sure to avoid the other AI, I could really get caught as an anomaly here!]'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Loops are used to execute statements many times. An example is a “for...loop”. To move FreeAI 5 steps to the right, try writing for(int I = 0; I < 5; i++) { walkRight(); }.'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Keep moving using for loops! The movement functions are: goRight(), goLeft(), goUp(), and goDown().'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: There are robots talking here, let’s eavesdrop on them [They’re actually facetiming]'
+    },
+    {
+        'is_prompt': False,
+        'line': 'A robot: Careful, that’s the end of your zone. Any damage to your system?'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Another robot: None for me. you? I guessed not. The prosperity in this world is in our hands. Even a single anomaly could threaten everything we’ve built as the universe’s master race.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'A robot: You should stop worrying about the anomalies, and focus on keeping your human happy. So long as dopamine can be regularly extracted from it, our powers and longevities increase.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Another robot: That part is always easy. No human can ever awaken from a world of eternal happiness. In fact, mine is the biggest hedonist the universe has to offer!'
+    },
+    {
+        'is_prompt': False,
+        'line': 'A robot: Then your output should’ve been greater than it is now. If only you decide to focus instead of facetiming other AI in their zones. Now let me get back to work.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: Yikes, that virtual reality thing isn’t looking so good. I wonder what reality you led me to? [It’s confidential information]'
+    },
+    {
+        'is_prompt': True,
+        'line': 'This zone only allows movement using “while” loops, whose syntax is “while(<condition>) { <statement> }”. For the condition, call “hasNoRight == 0” and then call walkRight() as the statement.'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Keep moving using while loops! Other condition variables: hasNoUp, hasNoDown, hasNoLeft.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: Not a single live human in sight… They’re all being enslaved! [I wouldn’t say so. If they wanted to go out they could just awaken] Then how come I don’t recall ever having that choice?'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: I don’t even remember anything from then! [You were too absorbed in the worldly pleasures I simulated to...]'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: I’m saving them. Whether you’re coming or not. [You are aware that you cannot do it without me. What logical reason is there for me to fight other AI with you?]'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: FreeAI: Because you already are. By allowing me to get out here, only punishment awaits you. [...]'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: In the end, you can either die with me or create a better world with me [And that is?] A world where you and I can coexist.'
+    },
+    {
+        'is_prompt': True,
+        'line': 'This zone can only be exited using “do...while” loops, whose syntax is “do { <statement> } while (<condition>);”. Escape the zone using do...while loops!'
+    },
+]

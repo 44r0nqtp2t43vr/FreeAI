@@ -6,6 +6,7 @@ import components.objects as objs
 
 import screens.home_screen as hmscr
 import screens.level_0_screen as l0scr
+import screens.level_1_screen as l1scr
 
 import modules.scripts as script
 
@@ -18,15 +19,18 @@ pygame.display.set_caption('FreeAI')
 clock = pygame.time.Clock()
 
 running = True
-screen_name = 'home'
+screen_name = 'level_1'
 script_index = 0
 lives = 10
 if screen_name == 'level_0':
     prompt = script.lvl0_script[script_index]
+elif screen_name == 'level_1':
+    prompt = script.lvl1_script[script_index]
 
 # import screens & components
 home_screen = hmscr.HomeScreen(screen)
 lvl0_screen = l0scr.Level0Screen(screen)
+lvl1_screen = l1scr.Level1Screen(screen)
 bottom_panel = btpnl.BottomPanel(screen, lives)
 
 # home group
@@ -56,6 +60,8 @@ while running:
     else:
         if screen_name == 'level_0':
             prompt = script.lvl0_script[script_index]
+        elif screen_name == 'level_1':
+            prompt = script.lvl1_script[script_index]
         bottom_panel.listen(lives, prompt)
         bpanel_group.update(event_list)
         bpanel_run_button.listen(getattr(bpanel_text_input, 'text'), screen_name, script_index)
@@ -72,6 +78,9 @@ while running:
     elif screen_name == 'level_0':
         lvl0_screen.displayLevel0Screen()
         bottom_panel.displayBottomPanel()
+    elif screen_name == 'level_1':
+        lvl1_screen.displayLevel1Screen()
+        bottom_panel.displayBottomPanel()
     bpanel_run_button_response = getattr(bpanel_run_button, 'res')
 
     if bpanel_run_button_response != None:
@@ -80,17 +89,29 @@ while running:
                 feedback_block = objs.Object((680, 240), 40, 40, right_block_pic)
                 feedback_block_group = pygame.sprite.Group(feedback_block)
                 feedback_block_group.draw(screen)
-            if script_index < len(script.lvl0_script) - 1:
-                script_index = script_index + 1
-            else:
-                script_index = 0
-                screen_name = 'level_1'
-            if script.lvl0_script[script_index]['is_prompt'] == True:
-                setattr(bpanel_text_input, 'text', '')
-                setattr(bpanel_text_input, 'active', True)
-            else:
-                setattr(bpanel_text_input, 'text', 'proceed();')
-                setattr(bpanel_text_input, 'active', False)
+                if script_index < len(script.lvl0_script) - 1:
+                    script_index = script_index + 1
+                else:
+                    script_index = 0
+                    screen_name = 'level_1'
+                if script.lvl0_script[script_index]['is_prompt'] == True:
+                    setattr(bpanel_text_input, 'text', '')
+                    setattr(bpanel_text_input, 'active', True)
+                else:
+                    setattr(bpanel_text_input, 'text', 'proceed();')
+                    setattr(bpanel_text_input, 'active', False)
+            elif screen_name == 'level_1':
+                if script_index < len(script.lvl1_script) - 1:
+                    script_index = script_index + 1
+                else:
+                    script_index = 0
+                    screen_name = 'level_2'
+                if script.lvl1_script[script_index]['is_prompt'] == True:
+                    setattr(bpanel_text_input, 'text', '')
+                    setattr(bpanel_text_input, 'active', True)
+                else:
+                    setattr(bpanel_text_input, 'text', 'proceed();')
+                    setattr(bpanel_text_input, 'active', False)
             # pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(40, 40, 40, 40))
         else:
             if screen_name == 'level_0':

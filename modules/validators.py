@@ -7,7 +7,7 @@ def validate_L0_04(statement_type, tags_list):
 def validate_L0_05(statement_type, tags_list):
     tags = [tagged_word[1] for tagged_word in tags_list]
     var_name_index = tags.index('var_name')
-    if len(tags_list) == 4 and (statement_type == 'assignment' and (var_name_index == 0 and 'number' in tags)):
+    if len(tags_list) == 4 or len(tags_list) == 5 and (statement_type == 'assignment' and (var_name_index == 0 and 'number' in tags)):
         return True
     return False
 
@@ -48,6 +48,6 @@ def validate_L0_21(statement_type, tags_list):
 def validate_L0_27(statement_type, tags_list):
     tags = [tagged_word[1] for tagged_word in tags_list]
     var_name_index = tags.index('var_name')
-    if len(tags_list) == 5 and (statement_type == 'assignment' and (tags_list[var_name_index][0] == 'freeai' and (tags_list[0][1] == 'int' and 'number' in tags))):
+    if len(tags_list) == 5 or len(tags_list) == 6 and (statement_type == 'assignment' and (tags_list[var_name_index][0] == 'freeai' and (tags_list[0][1] == 'int' and 'number' in tags))):
         return True
     return False
