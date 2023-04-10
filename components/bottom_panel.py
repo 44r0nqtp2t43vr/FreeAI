@@ -1,5 +1,6 @@
 import pygame
 import components.buttons as btns
+import components.objects as objs
 import components.text_input as txin
 import components.text as text
 
@@ -12,8 +13,8 @@ class BottomPanel():
         self.prompt = ''
 
         # import images
-        self.bpanel_bg = pygame.image.load('assets/images/bpanel_bg.png').convert()
-        # self.bpanel_bg = pygame.transform.scale(self.bpanel_bg, (self.screen_width, (self.screen_height//3)*2))
+        self.bpanel_bg = pygame.image.load('assets/images/bg_bpanel.png').convert()
+        self.avatar_pic = pygame.image.load('assets/images/avatar.png').convert_alpha()
 
         # import texts
         # title_font = pygame.font.Font('assets/fonts/KenneyRocketSquare.ttf', 72)
@@ -40,8 +41,15 @@ class BottomPanel():
         self.prompt = prompt
 
         prompt_text_font = pygame.font.Font('assets/fonts/KenneyMiniSquareMono.ttf', 12)
-        self.prompt_text = text.MultilineText((self.screen_width//8)*3, ((self.screen_height//3)//8)*5, 320, 180, prompt_text_font, self.prompt, (30, 167, 225))
-        self.bpanel_group_2 = pygame.sprite.Group(self.title, self.player, self.prompt_text)
+        prompt_text = text.MultilineText((self.screen_width//8)*3, ((self.screen_height//3)//8)*5, 320, 180, prompt_text_font, self.prompt, (30, 167, 225))
+        avatars = []
+        for i in range(lives):
+            if i < 5:
+                avatar = objs.Object((20 + i * 60, 10 + ((self.screen_height//3)//4)), 50, 50, self.avatar_pic)
+            else:
+                avatar = objs.Object((20 + (i-5) * 60, 10 + ((self.screen_height//3)//4)*2), 50, 50, self.avatar_pic)
+            avatars.append(avatar)
+        self.bpanel_group_2 = pygame.sprite.Group(self.title, self.player, prompt_text, avatars)
 
     def displayBottomPanel(self):
         self.bottom_surface = pygame.Surface((self.screen_width, self.screen_height//3), pygame.SRCALPHA)

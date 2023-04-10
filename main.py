@@ -3,6 +3,7 @@ import pygame
 import modules.compiler as comp
 
 import components.bottom_panel as btpnl
+import components.objects as objs
 
 import screens.home_screen as hmscr
 import screens.level_0_screen as l0scr
@@ -15,7 +16,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('FreeAI')
 clock = pygame.time.Clock()
 lives = 10
-prompt = 'Initialize an integer variable without a value to start repairing the robot, using the syntax “int repairCode;”. Int defines the variable named repairCode as an integer, which is one of the available data types in C. This allows the variable to be used in the succeeding lines of code.'
+prompt = 'Initialize an integer variable without a value to start repairing the robot, using the syntax “int repaircode;”. Int defines the variable named repaircode as an integer, which is one of the available data types in C. Note: All code will be in lowercase.'
 
 # import screens & components
 home_screen = hmscr.HomeScreen(screen)
@@ -30,6 +31,10 @@ home_awaken_button = getattr(home_screen, 'awaken_button')
 bpanel_group = getattr(bottom_panel, 'bpanel_group')
 bpanel_run_button = getattr(bottom_panel, 'run_button')
 bpanel_text_input = getattr(bottom_panel, 'text_input')
+
+# feedback block pics
+right_block_pic = pygame.image.load('assets/images/block_right.png').convert_alpha()
+wrong_block_pic = pygame.image.load('assets/images/block_wrong.png').convert_alpha()
 
 running = True
 screen_name = 'level_0'
@@ -62,9 +67,15 @@ while running:
         bottom_panel.displayBottomPanel()
         bpanel_run_button_response = getattr(bpanel_run_button, 'res')
         if bpanel_run_button_response != None:
-            pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(40, 40, 40, 40))
+            feedback_block = objs.Object((680, 240), 40, 40, right_block_pic)
+            feedback_block_group = pygame.sprite.Group(feedback_block)
+            feedback_block_group.draw(screen)
+            # pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(40, 40, 40, 40))
         else: 
-            pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(40, 40, 40, 40))    
+            feedback_block = objs.Object((680, 240), 40, 40, wrong_block_pic)
+            feedback_block_group = pygame.sprite.Group(feedback_block)
+            feedback_block_group.draw(screen)
+            # pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(40, 40, 40, 40))    
 
     # flip() the display to put your work on screen
     pygame.display.flip()

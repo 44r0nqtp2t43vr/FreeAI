@@ -8,7 +8,7 @@ class HomeScreen():
         self.screen_height = 720
 
         # import images
-        self.home_bg = pygame.image.load('assets/images/home_bg.jpg').convert()
+        self.home_bg = pygame.image.load('assets/images/bg_home.jpg').convert()
         self.home_bg = pygame.transform.scale(self.home_bg, (self.screen_width, self.screen_height))
 
         # import texts
