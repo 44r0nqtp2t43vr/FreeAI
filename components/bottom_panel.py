@@ -30,8 +30,8 @@ class BottomPanel():
         self.title = text.Text((self.screen_width//8)*3-20, (self.screen_height//3)//8, 280, 60, title_font, 'Code Editor', (255, 255, 255))
         player_font = pygame.font.Font('assets/fonts/KenneyFutureNarrow.ttf', 32)
         self.player = text.Text(self.screen_width//8+10, (self.screen_height//3)//8, 280, 60, player_font, 'Player', (53, 186, 243))
-        prompt_text_font = pygame.font.Font('assets/fonts/KenneyMiniSquare.ttf', 16)
-        self.prompt_text = text.MultilineText((self.screen_width//8)*3-20, ((self.screen_height//3)//8)*5, 280, 180, prompt_text_font, self.prompt, (255, 255, 255))
+        # prompt_text_font = pygame.font.Font('assets/fonts/KenneyMiniSquare.ttf', 16)
+        # self.prompt_text = text.MultilineText((self.screen_width//8)*3-20, ((self.screen_height//3)//8)*5, 280, 180, prompt_text_font, self.prompt, (255, 255, 255))
 
         # initialize sprite group
         self.bpanel_group = pygame.sprite.Group(self.run_button, self.text_input)
@@ -43,7 +43,7 @@ class BottomPanel():
         prompt_line = prompt['line']
 
         prompt_text_font = pygame.font.Font('assets/fonts/KenneyMiniSquareMono.ttf', 12)
-        prompt_text = text.MultilineText((self.screen_width//8)*3, ((self.screen_height//3)//8)*5, 320, 180, prompt_text_font, prompt_line, (30, 167, 225))
+        prompt_text = text.MultilineText((self.screen_width//8)*3, ((self.screen_height//3)//8)*5, 320, 180, prompt_text_font, prompt_line, (24, 139, 188))
         avatars = []
         for i in range(lives):
             if i < 5:

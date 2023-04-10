@@ -2,7 +2,7 @@ import modules.validators as validator
 
 lexicon_dict = {
     'int': ['int'],
-    'var_name': ['repaircode'],
+    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai'],
     'function_name': ['proceed'],
     'number': [str(num) for num in range(1000)],
     'operator_ari': ['+', '-', '*', '/', '%'],
@@ -33,7 +33,7 @@ grammar_dict = {
     'S': [['statement_list']],
     'statement_list': [['statement'], ['statement', 'statement_list']],
     'statement': [['assignment'], ['conditional'], ['loop'], ['function_call']],
-    'assignment': [['int_ass']],
+    'assignment': [['int_ass'], ['increment', ';']],
     'conditional': [['cond_if'], ['cond_switch']],
     'loop': [['loop_while'], ['loop_do_while'], ['loop_for']],
     'int_ass': [['int', 'var_name', ';'], ['int', 'var_name', '=', 'value_list', ';'], ['var_name', 'operator_ass', 'value_list', ';']],
@@ -232,6 +232,18 @@ def compile(code, screen_name, script_index):
     if screen_name == 'level_0' and script_index in lvl0_to_validate:
         if script_index == 4:
             is_valid = validator.validate_L0_04(statement_type, tags_list)
+        elif script_index == 5:
+            is_valid = validator.validate_L0_05(statement_type, tags_list)
+        elif script_index == 6:
+            is_valid = validator.validate_L0_06(statement_type, tags_list)
+        elif script_index == 19:
+            is_valid = validator.validate_L0_19(statement_type, tags_list)
+        elif script_index == 20:
+            is_valid = validator.validate_L0_20(statement_type, tags_list)
+        elif script_index == 21:
+            is_valid = validator.validate_L0_21(statement_type, tags_list)
+        elif script_index == 27:
+            is_valid = validator.validate_L0_27(statement_type, tags_list)
         if is_valid == False:
             return {'is_valid': False}
     response = {
