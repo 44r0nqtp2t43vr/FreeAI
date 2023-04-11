@@ -14,7 +14,6 @@ class Level1Screen():
         anomaly_sprite_pic = pygame.image.load('assets/images/sprite_ai.png').convert_alpha()
         metal_block_pic = pygame.image.load('assets/images/block_metal_2.png').convert()
         stone_block_pic = pygame.image.load('assets/images/block_stone.png').convert()
-        star_pic = pygame.image.load('assets/images/star.png').convert_alpha()
         # self.lvl0_bg = pygame.transform.scale(self.lvl0_bg, (self.screen_width, (self.screen_height//3)*2))
 
         # import texts
@@ -70,13 +69,9 @@ class Level1Screen():
         # story_button_font = pygame.font.Font('assets/fonts/KenneyHighSquare.ttf', 60)
         # self.story_button = btns.HomeButton(self.screen_width//2, (self.screen_height//4)*3 - 40, 200, 60, story_button_font, "Story", (255, 255, 255))
 
-        # initialize star
-        star = objs.Object((400, 240), 40, 40, star_pic)
-
         # initialize sprite group
         self.block_group = pygame.sprite.Group(blocks)
         self.sprite_group = pygame.sprite.Group(sprites)
-        self.star_group = pygame.sprite.Group(star)
         # self.home_group = pygame.sprite.Group(self.story_button)
     
     def displayLevel1Screen(self):
@@ -85,6 +80,5 @@ class Level1Screen():
         self.screen.blit(self.top_surface, (0, 0))
         self.block_group.draw(self.screen)
         self.sprite_group.draw(self.screen)
-        self.star_group.draw(self.screen)
         # self.screen.blit(self.title_text, self.title_textRect)
         # self.home_group.draw(self.screen)

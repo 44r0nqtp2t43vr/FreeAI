@@ -22,6 +22,7 @@ clock = pygame.time.Clock()
 running = True
 screen_name = 'level_1'
 script_index = 0
+star_pos_index = 0
 lives = 10
 if screen_name == 'level_0':
     prompt = script.lvl0_script[script_index]
@@ -63,6 +64,13 @@ player_sprite_pic = pygame.image.load('assets/images/sprite_freeai.png').convert
 if screen_name == 'home' or screen_name == 'level_1':
     player_sprite = objs.Object((0, 360), 40, 40, player_sprite_pic)
     player_sprite_group = pygame.sprite.Group(player_sprite)
+    old_psprite_pos = getattr(player_sprite, 'pos')
+    new_psprite_pos = getattr(player_sprite, 'pos')
+    lvl1_star_pos_list = [(400, 240), (1040, 400), (1160, 40)]
+    # star sprite
+    star_pic = pygame.image.load('assets/images/star.png').convert_alpha()
+    star = objs.Object(lvl1_star_pos_list[star_pos_index], 40, 40, star_pic)
+    star_group = pygame.sprite.Group(star)
 
 while running:
     # poll for events
@@ -97,7 +105,24 @@ while running:
     elif screen_name == 'level_1':
         lvl1_screen.displayLevel1Screen()
         bottom_panel.displayBottomPanel()
+        old_psprite_pos = execute.updatePos(old_psprite_pos, new_psprite_pos)
+        player_sprite = objs.Object(old_psprite_pos, 40, 40, player_sprite_pic)
+        player_sprite_group = pygame.sprite.Group(player_sprite)
         player_sprite_group.draw(screen)
+        if len(pygame.sprite.spritecollide(player_sprite, star_group, False)) > 0:
+            if star_pos_index < len(lvl1_star_pos_list) - 1:
+                star_pos_index = star_pos_index + 1
+            if script_index < len(script.lvl1_script) - 1:
+                script_index = script_index + 1
+                if script.lvl1_script[script_index]['is_prompt'] == True:
+                    setattr(bpanel_text_input, 'text', '')
+                    setattr(bpanel_text_input, 'active', True)
+                else:
+                    setattr(bpanel_text_input, 'text', 'proceed();')
+                    setattr(bpanel_text_input, 'active', False)
+        star = objs.Object(lvl1_star_pos_list[star_pos_index], 40, 40, star_pic)
+        star_group = pygame.sprite.Group(star)
+        star_group.draw(screen)
     bpanel_run_button_response = getattr(bpanel_run_button, 'res')
 
     if bpanel_run_button_response != None:
@@ -121,26 +146,22 @@ while running:
                 feedback_block = objs.Object((0, 400), 40, 40, right_block_pic)
                 feedback_block_group = pygame.sprite.Group(feedback_block)
                 feedback_block_group.draw(screen)
-                # print(pygame.sprite.spritecollide(player_sprite, feedback_block_group, False))
                 if script_index < len(script.lvl1_script) - 1:
                     if script_index not in script.lvl1_withold:
                         if script_index == script.lvl1_to_validate[0]:
                             old_psprite_pos = getattr(player_sprite, 'pos')
                             new_psprite_pos = execute.executeForLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
-                            player_sprite = objs.Object(new_psprite_pos, 40, 40, player_sprite_pic)
-                            player_sprite_group = pygame.sprite.Group(player_sprite)
                             if old_psprite_pos == new_psprite_pos:
                                 lives = lives - 1
                         script_index = script_index + 1
                     elif script_index == script.lvl1_withold[0]:
                         old_psprite_pos = getattr(player_sprite, 'pos')
                         new_psprite_pos = execute.executeForLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
-                        player_sprite = objs.Object(new_psprite_pos, 40, 40, player_sprite_pic)
-                        player_sprite_group = pygame.sprite.Group(player_sprite)
                         if old_psprite_pos == new_psprite_pos:
                             lives = lives - 1
                 else:
                     script_index = 0
+                    star_pos_index = 0
                     screen_name = 'level_2'
                 if script.lvl1_script[script_index]['is_prompt'] == True:
                     setattr(bpanel_text_input, 'text', '')

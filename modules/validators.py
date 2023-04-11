@@ -109,3 +109,18 @@ def validate_L1_05(statement_type, tags_list):
                 return False
             return True
     return False
+
+def validate_L1_13(statement_type, tags_list):
+    print(statement_type)
+    print(tags_list)
+    return True
+
+def validate_L1_14(statement_type, tags_list):
+    print(statement_type)
+    print(tags_list)
+    return True
+
+def validate_L1_20(statement_type, tags_list):
+    print(statement_type)
+    print(tags_list)
+    return True

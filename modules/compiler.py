@@ -2,7 +2,7 @@ import modules.validators as validator
 
 lexicon_dict = {
     'int': ['int'],
-    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai', 'i'],
+    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai', 'i', 'hasnoright', 'hasnoleft', 'hasnoup', 'hasnodown'],
     'function_name': ['proceed', 'goright', 'goleft', 'goup', 'godown'],
     'number': [str(num) for num in range(1000)],
     'operator_ari': ['+', '-', '*', '/', '%'],
@@ -252,6 +252,12 @@ def compile(code, screen_name, script_index):
             is_valid = validator.validate_L1_04(statement_type, tags_list)
         elif script_index == 5:
             is_valid = validator.validate_L1_05(statement_type, tags_list)
+        elif script_index == 13:
+            is_valid = validator.validate_L1_13(statement_type, tags_list)
+        elif script_index == 14:
+            is_valid = validator.validate_L1_14(statement_type, tags_list)
+        elif script_index == 20:
+            is_valid = validator.validate_L1_20(statement_type, tags_list)
         if is_valid == False:
             return {'is_valid': False}
     response = {
