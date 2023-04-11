@@ -113,6 +113,9 @@ lvl0_script = [
     },
 ]
 
+lvl1_withold = [5, 14, 20]
+lvl1_to_validate = [4, 5, 13, 14, 20]
+
 lvl1_script = [
     {
         'is_prompt': False,
@@ -132,7 +135,7 @@ lvl1_script = [
     },
     {
         'is_prompt': True,
-        'line': 'Loops are used to execute statements many times. An example is a “for...loop”. To move FreeAI 5 steps to the right, try writing for(int I = 0; I < 5; i++) { walkRight(); }.'
+        'line': 'Loops are used to execute statements many times. An example is a “for...loop”. To move FreeAI 5 steps to the right, try writing for(int I = 0; I < 4; i++) { goRight(); }.'
     },
     {
         'is_prompt': True,
@@ -196,6 +199,6 @@ lvl1_script = [
     },
     {
         'is_prompt': True,
-        'line': 'This zone can only be exited using “do...while” loops, whose syntax is “do { <statement> } while (<condition>);”. Escape the zone using do...while loops!'
+        'line': 'This zone can only be exited using “do while” loops, whose syntax is “do { <statement> } while (<condition>);”. Escape the zone using do while loops!'
     },
 ]

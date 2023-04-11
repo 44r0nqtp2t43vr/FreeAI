@@ -9,6 +9,7 @@ import screens.level_0_screen as l0scr
 import screens.level_1_screen as l1scr
 
 import modules.scripts as script
+import modules.executors as execute
 
 # pygame setup
 pygame.init()
@@ -42,11 +43,26 @@ bpanel_group = getattr(bottom_panel, 'bpanel_group')
 bpanel_run_button = getattr(bottom_panel, 'run_button')
 bpanel_text_input = getattr(bottom_panel, 'text_input')
 
+# screen block groups
+lvl1_block_group = getattr(lvl1_screen, 'block_group')
+
+# screen sprite groups
+lvl1_sprite_group = getattr(lvl1_screen, 'sprite_group')
+
 # feedback block pics
 right_block_pic = pygame.image.load('assets/images/block_right.png').convert_alpha()
 wrong_block_pic = pygame.image.load('assets/images/block_wrong.png').convert_alpha()
-feedback_block = objs.Object((680, 240), 40, 40, wrong_block_pic)
+if screen_name == 'home' or screen_name == 'level_0':
+    feedback_block = objs.Object((680, 240), 40, 40, wrong_block_pic)
+elif screen_name == 'level_1':
+    feedback_block = objs.Object((0, 400), 40, 40, wrong_block_pic)
 feedback_block_group = pygame.sprite.Group(feedback_block)
+
+# player_sprite
+player_sprite_pic = pygame.image.load('assets/images/sprite_freeai.png').convert_alpha()
+if screen_name == 'home' or screen_name == 'level_1':
+    player_sprite = objs.Object((0, 360), 40, 40, player_sprite_pic)
+    player_sprite_group = pygame.sprite.Group(player_sprite)
 
 while running:
     # poll for events
@@ -81,6 +97,7 @@ while running:
     elif screen_name == 'level_1':
         lvl1_screen.displayLevel1Screen()
         bottom_panel.displayBottomPanel()
+        player_sprite_group.draw(screen)
     bpanel_run_button_response = getattr(bpanel_run_button, 'res')
 
     if bpanel_run_button_response != None:
@@ -101,8 +118,27 @@ while running:
                     setattr(bpanel_text_input, 'text', 'proceed();')
                     setattr(bpanel_text_input, 'active', False)
             elif screen_name == 'level_1':
+                feedback_block = objs.Object((0, 400), 40, 40, right_block_pic)
+                feedback_block_group = pygame.sprite.Group(feedback_block)
+                feedback_block_group.draw(screen)
+                # print(pygame.sprite.spritecollide(player_sprite, feedback_block_group, False))
                 if script_index < len(script.lvl1_script) - 1:
-                    script_index = script_index + 1
+                    if script_index not in script.lvl1_withold:
+                        if script_index == script.lvl1_to_validate[0]:
+                            old_psprite_pos = getattr(player_sprite, 'pos')
+                            new_psprite_pos = execute.executeForLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
+                            player_sprite = objs.Object(new_psprite_pos, 40, 40, player_sprite_pic)
+                            player_sprite_group = pygame.sprite.Group(player_sprite)
+                            if old_psprite_pos == new_psprite_pos:
+                                lives = lives - 1
+                        script_index = script_index + 1
+                    elif script_index == script.lvl1_withold[0]:
+                        old_psprite_pos = getattr(player_sprite, 'pos')
+                        new_psprite_pos = execute.executeForLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
+                        player_sprite = objs.Object(new_psprite_pos, 40, 40, player_sprite_pic)
+                        player_sprite_group = pygame.sprite.Group(player_sprite)
+                        if old_psprite_pos == new_psprite_pos:
+                            lives = lives - 1
                 else:
                     script_index = 0
                     screen_name = 'level_2'
@@ -118,14 +154,19 @@ while running:
                 feedback_block = objs.Object((680, 240), 40, 40, wrong_block_pic)
                 feedback_block_group = pygame.sprite.Group(feedback_block)
                 feedback_block_group.draw(screen)
+            elif screen_name == 'level_1':
+                feedback_block = objs.Object((0, 400), 40, 40, wrong_block_pic)
+                feedback_block_group = pygame.sprite.Group(feedback_block)
+                feedback_block_group.draw(screen)
             lives = lives - 1
             if lives == 0:
                 screen_name = 'game_over'
             # pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(40, 40, 40, 40))
         bpanel_run_button_response = setattr(bpanel_run_button, 'res', None)
     else: 
-        if screen_name == 'level_0':
-            feedback_block_group.draw(screen)
+        # if screen_name == 'level_0':
+        #     feedback_block_group.draw(screen)
+        feedback_block_group.draw(screen)
         # pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(40, 40, 40, 40))    
 
     # flip() the display to put your work on screen

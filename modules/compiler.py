@@ -2,8 +2,8 @@ import modules.validators as validator
 
 lexicon_dict = {
     'int': ['int'],
-    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai'],
-    'function_name': ['proceed'],
+    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai', 'i'],
+    'function_name': ['proceed', 'goright', 'goleft', 'goup', 'godown'],
     'number': [str(num) for num in range(1000)],
     'operator_ari': ['+', '-', '*', '/', '%'],
     'operator_glt': ['>', '<'],
@@ -214,6 +214,7 @@ class EarleyParser:
 # print(parser.parse('int my_int = 0 ;'))
 
 lvl0_to_validate = [4, 5, 6, 19, 20, 21, 27]
+lvl1_to_validate = [4, 5, 13, 14, 20]
 
 def compile(code, screen_name, script_index):
     if code.strip() == '':
@@ -244,6 +245,13 @@ def compile(code, screen_name, script_index):
             is_valid = validator.validate_L0_21(statement_type, tags_list)
         elif script_index == 27:
             is_valid = validator.validate_L0_27(statement_type, tags_list)
+        if is_valid == False:
+            return {'is_valid': False}
+    elif screen_name == 'level_1' and script_index in lvl1_to_validate:
+        if script_index == 4:
+            is_valid = validator.validate_L1_04(statement_type, tags_list)
+        elif script_index == 5:
+            is_valid = validator.validate_L1_05(statement_type, tags_list)
         if is_valid == False:
             return {'is_valid': False}
     response = {
