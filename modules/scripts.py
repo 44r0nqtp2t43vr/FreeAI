@@ -171,11 +171,11 @@ lvl1_script = [
     },
     {
         'is_prompt': True,
-        'line': 'This zone only allows movement using “while” loops, whose syntax is “while(<condition>) { <statement> }”. For the condition, call “hasNoRight == 0” and then call walkRight() as the statement.'
+        'line': 'This zone only allows movement using “while” loops, whose syntax is “while(<condition>) { <statement> }”. For the condition, call “hasNoRight == 0” and then call goRight() as the statement.'
     },
     {
         'is_prompt': True,
-        'line': 'Keep moving using while loops! Other condition variables: hasNoUp, hasNoDown, hasNoLeft.'
+        'line': 'Keep moving using while loops! Other condition variables: hasNoUp, hasNoDown, hasNoLeft. Note: Dont bump into other robots!'
     },
     {
         'is_prompt': False,
@@ -200,5 +200,12 @@ lvl1_script = [
     {
         'is_prompt': True,
         'line': 'This zone can only be exited using “do while” loops, whose syntax is “do { <statement> } while (<condition>);”. Escape the zone using do while loops!'
+    },
+]
+
+lvl2_script = [
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: So, how does fighting work in this world? [It’s a simple battle between three elementoids: the electroids, wateroids, and firoids, where the one before beats the one after, and firoids beat electroids.]'
     },
 ]

@@ -111,16 +111,47 @@ def validate_L1_05(statement_type, tags_list):
     return False
 
 def validate_L1_13(statement_type, tags_list):
-    print(statement_type)
-    print(tags_list)
-    return True
+    equals_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == '=']
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    number_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'number']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if statement_type == 'loop' and (len(equals_indices) == 2 and (len(varname_indices) == 1 and (len(number_indices) == 1 and len(function_indices) == 1))):
+        if tags_list[varname_indices[0]][0] != 'hasnoright' or tags_list[function_indices[0]][0] != 'goright':
+            return False
+        if tags_list[0][1] == 'while' and (equals_indices[1] - equals_indices[0] == 1 and tags_list[number_indices[0]][0] == '0'):
+            return True
+    return False
 
 def validate_L1_14(statement_type, tags_list):
-    print(statement_type)
-    print(tags_list)
-    return True
+    equals_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == '=']
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    number_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'number']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if statement_type == 'loop' and (len(equals_indices) == 2 and (len(varname_indices) == 1 and (len(number_indices) == 1 and len(function_indices) == 1))):
+        if tags_list[0][1] == 'while' and (equals_indices[1] - equals_indices[0] == 1 and tags_list[number_indices[0]][0] == '0'):
+            if tags_list[varname_indices[0]][0] == 'hasnoright' and tags_list[function_indices[0]][0] == 'goright':
+                return True
+            elif tags_list[varname_indices[0]][0] == 'hasnoleft' and tags_list[function_indices[0]][0] == 'goleft':
+                return True
+            elif tags_list[varname_indices[0]][0] == 'hasnoup' and tags_list[function_indices[0]][0] == 'goup':
+                return True
+            elif tags_list[varname_indices[0]][0] == 'hasnodown' and tags_list[function_indices[0]][0] == 'godown':
+                return True
+    return False
 
 def validate_L1_20(statement_type, tags_list):
-    print(statement_type)
-    print(tags_list)
-    return True
+    equals_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == '=']
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    number_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'number']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if statement_type == 'loop' and (len(equals_indices) == 2 and (len(varname_indices) == 1 and (len(number_indices) == 1 and len(function_indices) == 1))):
+        if tags_list[0][1] == 'do' and (equals_indices[1] - equals_indices[0] == 1 and tags_list[number_indices[0]][0] == '0'):
+            if tags_list[varname_indices[0]][0] == 'hasnoright' and tags_list[function_indices[0]][0] == 'goright':
+                return True
+            elif tags_list[varname_indices[0]][0] == 'hasnoleft' and tags_list[function_indices[0]][0] == 'goleft':
+                return True
+            elif tags_list[varname_indices[0]][0] == 'hasnoup' and tags_list[function_indices[0]][0] == 'goup':
+                return True
+            elif tags_list[varname_indices[0]][0] == 'hasnodown' and tags_list[function_indices[0]][0] == 'godown':
+                return True
+    return False

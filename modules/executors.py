@@ -63,12 +63,49 @@ def executeForLoop(response, old_pos, block_group, sprite_group):
     if function_name == 'goright' or function_name == 'goleft':
         for x in test_list:
             test_sprite = objs.Object((x, new_pos[1]), 40, 40, test_pic)
-            if len(pygame.sprite.spritecollide(test_sprite, block_group, False)) > 0 or len(pygame.sprite.spritecollide(test_sprite, sprite_group, False)):
+            if len(pygame.sprite.spritecollide(test_sprite, block_group, False)) > 0 or len(pygame.sprite.spritecollide(test_sprite, sprite_group, False)) > 0:
                 return old_pos
     else:
         for y in test_list:
             test_sprite = objs.Object((new_pos[0], y), 40, 40, test_pic)
-            if len(pygame.sprite.spritecollide(test_sprite, block_group, False)) > 0 or len(pygame.sprite.spritecollide(test_sprite, sprite_group, False)):
+            if len(pygame.sprite.spritecollide(test_sprite, block_group, False)) > 0 or len(pygame.sprite.spritecollide(test_sprite, sprite_group, False)) > 0:
                 return old_pos
     
     return new_pos
+
+def executeWhileLoop(response, old_pos, block_group, sprite_group):
+    screen_width = 1280
+    screen_height = 720
+
+    tags_list = response['tags_list']
+    tags = [tagged_word[1] for tagged_word in tags_list]
+    function_name = tags_list[tags.index('function_name')][0]
+
+    test_pic = pygame.image.load('assets/images/sprite_freeai.png').convert_alpha()
+    test_sprite = objs.Object(old_pos, 40, 40, test_pic)
+    x = old_pos[0]
+    y = old_pos[1]
+    while (x >= 0 and x <= screen_width - 40) and (y >= 0 and y <= screen_height - 40):
+            test_sprite = objs.Object((x, y), 40, 40, test_pic)
+            if len(pygame.sprite.spritecollide(test_sprite, block_group, False)) > 0:
+                if function_name == 'goright':
+                    return (x - 40, y)
+                elif function_name == 'goleft':
+                    return (x + 40, y)
+                elif function_name == 'godown':
+                    return (x, y - 40)
+                elif function_name == 'goup':
+                    return (x, y + 40)
+            if len(pygame.sprite.spritecollide(test_sprite, sprite_group, False)) > 0:
+                if x == 1200 and y == 40:
+                    return (1160, 40)
+                return old_pos
+            if function_name == 'goright':
+                x = x + 40
+            elif function_name == 'goleft':
+                x = x - 40
+            elif function_name == 'godown':
+                y = y + 40
+            elif function_name == 'goup':
+                y = y - 40
+    return old_pos
