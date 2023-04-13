@@ -304,3 +304,65 @@ lvl2_script = [
         'line': 'FreeAI: You still do, and we’ll prove it to you. We won’t just save the humans inside, but the AI too!'
     },
 ]
+
+lvl3_withold = [6, 11]
+lvl3_to_validate = [1, 6, 8, 11, 12]
+
+lvl3_script = [
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: How do we separate them safely? [Since this AI is still awake, a void function should do]'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Write a void function called “repair”, and inside, set the value of “repairCode” to any value. The syntax is “void repair() { int repairCode = <value>; return; }, where the data type returned is void and all the function does is set the repairCode.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Yet another robot: I am unable to comprehend your reasons for repairing me and returning the human to the universe. It is more efficient to terminate my system.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: Don’t think about it too much. It’s simply what we do when someone needs help'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Yet another robot: I am grateful, human...robot hybrid'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: [Let’s do the same for the rest, too]'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Continue moving using while loops.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: How about for this one? [The AI needs a key, which is two less the human key. An int function should do the trick]'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Write an int function called “getKey” that takes an int parameter “humanKey”. In the function body, initialize an int variable called “finalKey” with a value of “humanKey + 2”, then return the final key.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Another robot: It’s the first time I’ve seen a robot’s life spared by a human.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: Heh ^_^ [Everything’s the first time for this one]'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Continue moving using while loops'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Write the same getKey function, but this time the final key is calculated by taking the human key multiplied by 2.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: We did it!'
+    },
+]

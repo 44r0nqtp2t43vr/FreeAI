@@ -199,3 +199,40 @@ def validate_L2_21(statement_type, tags_list):
             return False
         return True
     return False
+
+def validate_L3_01(statement_type, tags_list):
+    tags = [tagged_word[1] for tagged_word in tags_list]
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if statement_type == 'function' and (len(varname_indices) == 1 and (len(function_indices) == 1 and ('int' in tags and 'number' in tags))):
+        if tags_list[0][1] == 'void' and (tags_list[function_indices[0]][0] == 'repair' and tags_list[varname_indices[0]][0] == 'repaircode'):
+            return True
+    return False
+
+def validate_L3_08(statement_type, tags_list):
+    tags = [tagged_word[1] for tagged_word in tags_list]
+    operator_ari = tags_list[tags.index('operator_ari')][0]
+    number = tags_list[tags.index('number')][0]
+    int_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'int']
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if statement_type == 'function' and (len(varname_indices) == 4 and (len(function_indices) == 1 and len(int_indices) == 3)):
+        if tags_list[0][1] == 'int' and (tags_list[function_indices[0]][0] == 'getkey' and (operator_ari == '+' and number == '2')):
+            if tags_list[varname_indices[0]][0] == 'humankey' and tags_list[varname_indices[2]][0] == 'humankey':
+                if tags_list[varname_indices[1]][0] == 'finalkey' and tags_list[varname_indices[3]][0] == 'finalkey':
+                    return True
+    return False
+
+def validate_L3_12(statement_type, tags_list):
+    tags = [tagged_word[1] for tagged_word in tags_list]
+    operator_ari = tags_list[tags.index('operator_ari')][0]
+    number = tags_list[tags.index('number')][0]
+    int_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'int']
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if statement_type == 'function' and (len(varname_indices) == 4 and (len(function_indices) == 1 and len(int_indices) == 3)):
+        if tags_list[0][1] == 'int' and (tags_list[function_indices[0]][0] == 'getkey' and (operator_ari == '*' and number == '2')):
+            if tags_list[varname_indices[0]][0] == 'humankey' and tags_list[varname_indices[2]][0] == 'humankey':
+                if tags_list[varname_indices[1]][0] == 'finalkey' and tags_list[varname_indices[3]][0] == 'finalkey':
+                    return True
+    return False

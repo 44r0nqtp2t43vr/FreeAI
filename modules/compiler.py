@@ -2,8 +2,9 @@ import modules.validators as validator
 
 lexicon_dict = {
     'int': ['int'],
-    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai', 'i', 'hasnoright', 'hasnoleft', 'hasnoup', 'hasnodown', 'turn'],
-    'function_name': ['proceed', 'goright', 'goleft', 'goup', 'godown', 'usefiroid', 'usewateroid', 'useelectroid'],
+    'void': ['void'],
+    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai', 'i', 'hasnoright', 'hasnoleft', 'hasnoup', 'hasnodown', 'turn', 'humankey', 'finalkey'],
+    'function_name': ['proceed', 'goright', 'goleft', 'goup', 'godown', 'usefiroid', 'usewateroid', 'useelectroid', 'repair', 'getkey'],
     'number': [str(num) for num in range(1000)],
     'operator_ari': ['+', '-', '*', '/', '%'],
     'operator_glt': ['>', '<'],
@@ -17,6 +18,7 @@ lexicon_dict = {
     'case': ['case'],
     'break': ['break'],
     'default': ['default'],
+    'return': ['return'],
     '=': ['='],
     ':': [':'],
     ';': [';'],
@@ -27,12 +29,13 @@ lexicon_dict = {
     '!': ['!'],
     '+': ['+'],
     '-': ['-'],
+    ',': [','], 
 }
 
 grammar_dict = {
     'S': [['statement_list']],
     'statement_list': [['statement'], ['statement', 'statement_list']],
-    'statement': [['assignment'], ['conditional'], ['loop'], ['function_call']],
+    'statement': [['assignment'], ['conditional'], ['loop'], ['function_call'], ['function']],
     'assignment': [['int_ass'], ['increment', ';']],
     'conditional': [['cond_if'], ['cond_switch']],
     'loop': [['loop_while'], ['loop_do_while'], ['loop_for']],
@@ -62,6 +65,10 @@ grammar_dict = {
     'condition_block': [['(', 'condition_list', ')']],
     'statement_block': [['{', 'statement_list', '}'], ['{', '}']],
     'function_call': [['function_name', '(', ')', ';']],
+    'function': [['void', 'function_name', '(', ')', '{', 'statement_list', 'return', ';', '}'],
+                 ['int', 'function_name', '(', 'parameters_list', ')', '{', 'statement_list', 'return', 'var_name', ';', '}']],
+    'parameters_list': [['parameter'], ['parameter', ',', 'parameters_list']],
+    'parameter': [['int', 'var_name']],
 }
 
 row_id = 0
@@ -216,13 +223,13 @@ class EarleyParser:
 lvl0_to_validate = [4, 5, 6, 19, 20, 21, 27]
 lvl1_to_validate = [4, 5, 13, 14, 20]
 lvl2_to_validate = [4, 6, 9, 13, 18, 21]
-
+lvl3_to_validate = [1, 6, 8, 11, 12]
 
 def compile(code, screen_name, script_index):
     if code.strip() == '':
         return {'is_valid': False}
     preprocess_list = [['\n', ' '], ['\t', ' '], ['=', ' = '], [';', ' ; '], ['(', ' ( '], [')', ' ) '], ['{', ' { '], ['}', ' } '], ['+', ' + '], 
-                       ['-', ' - '], ['*', ' * '], ['/', ' / '], ['%', ' % '], ['>', ' > '], ['<', ' < '], ['!', ' ! '] , [':', ' : ']]
+                       ['-', ' - '], ['*', ' * '], ['/', ' / '], ['%', ' % '], ['>', ' > '], ['<', ' < '], ['!', ' ! '] , [':', ' : '], [',', ' , ']]
     for pair in preprocess_list:
         code = code.replace(pair[0], pair[1])
     parser = EarleyParser(lexicon_dict, grammar_dict)
@@ -271,6 +278,17 @@ def compile(code, screen_name, script_index):
             is_valid = validator.validate_L2_13(statement_type, tags_list)
         elif script_index == 21:
             is_valid = validator.validate_L2_21(statement_type, tags_list)
+        if is_valid == False:
+            return {'is_valid': False}
+    elif screen_name == 'level_3' and script_index in lvl3_to_validate:
+        if script_index == 6 or script_index == 11:
+            is_valid = validator.validate_L1_14(statement_type, tags_list)
+        elif script_index == 1:
+            is_valid = validator.validate_L3_01(statement_type, tags_list)
+        elif script_index == 8:
+            is_valid = validator.validate_L3_08(statement_type, tags_list)
+        elif script_index == 12:
+            is_valid = validator.validate_L3_12(statement_type, tags_list)
         if is_valid == False:
             return {'is_valid': False}
     response = {

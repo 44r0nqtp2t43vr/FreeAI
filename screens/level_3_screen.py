@@ -1,7 +1,7 @@
 import pygame
 import components.objects as objs
 
-class Level2Screen():
+class Level3Screen():
     def __init__(self, screen):
         self.screen = screen
         self.screen_width = 1280
@@ -63,7 +63,7 @@ class Level2Screen():
         self.block_group = pygame.sprite.Group(blocks)
         self.sprite_group = pygame.sprite.Group(sprites)
     
-    def displayLevel2Screen(self):
+    def displayLevel3Screen(self):
         self.top_surface = pygame.Surface((self.screen_width, (self.screen_height//3)*2), pygame.SRCALPHA)
         self.top_surface.blit(self.lvl0_bg, (0, 0))
         self.screen.blit(self.top_surface, (0, 0))
