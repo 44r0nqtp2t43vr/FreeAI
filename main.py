@@ -75,7 +75,7 @@ if screen_name == 'home' or screen_name == 'level_1' or screen_name == 'level_2'
     new_psprite_pos = getattr(player_sprite, 'pos')
 
 lvl1_star_pos_list = [(400, 240), (1040, 400), (1160, 40), (1280, 0)]
-lvl2_star_pos_list = [(400, 240), (1040, 400), (1160, 40), (1280, 0)]
+lvl2_star_pos_list = [(520, 160), (920, 280), (1160, 40), (1280, 0)]
 if screen_name == 'home' or screen_name == 'level_1':
     star_pic = pygame.image.load('assets/images/star.png').convert_alpha()
     star = objs.Object(lvl1_star_pos_list[star_pos_index], 40, 40, star_pic)
@@ -260,7 +260,7 @@ while running:
                         script_index = script_index + 1
                     else:
                         old_psprite_pos = getattr(player_sprite, 'pos')
-                        new_psprite_pos = execute.executeWhileLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
+                        new_psprite_pos = execute.executeWhileLoop(bpanel_run_button_response, old_psprite_pos, lvl2_block_group, lvl2_sprite_group)
                         if old_psprite_pos == new_psprite_pos:
                             lives = lives - 1
                     if script.lvl2_script[script_index]['is_prompt'] == True:

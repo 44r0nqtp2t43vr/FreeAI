@@ -221,7 +221,7 @@ lvl2_script = [
     },
     {
         'is_prompt': False,
-        'line': 'FreeAI: [In this case, set the condition to “turnNum == 1” for the first turn, and the statement to either useElectroid(), useWateroid(), or useFiroid(). To start a fight, just move closer to an enemy]'
+        'line': 'FreeAI: [In this case, set the condition to “turn == 1” for the first turn, and the statement to either useElectroid(), useWateroid(), or useFiroid(). To start a fight, just move closer to an enemy]'
     },
     {
         'is_prompt': True,

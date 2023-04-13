@@ -180,6 +180,22 @@ def validate_L2_13(statement_type, tags_list):
     return False
 
 def validate_L2_21(statement_type, tags_list):
-    print(statement_type)
-    print(tags_list)
-    return True
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    equals_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == '=']
+    number_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'number']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'if']
+    else_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'else']
+    if statement_type == 'conditional' and (len(equals_indices) == 4 and (len(varname_indices) == 2 and (len(number_indices) == 2 and (len(function_indices) == 3 and (len(if_indices) == 2 and len(else_indices) == 2))))):
+        if (equals_indices[1] - equals_indices[0] != 1) or (equals_indices[3] - equals_indices[2] != 1):
+            return False
+        if tags_list[number_indices[0]][0] != '70' or tags_list[number_indices[1]][0] != '421':
+            return False
+        if tags_list[varname_indices[0]][0] != 'turn' or tags_list[varname_indices[1]][0] != 'turn':
+            return False
+        if tags_list[function_indices[0]][0] != 'usefiroid' or tags_list[function_indices[1]][0] != 'usewateroid' or tags_list[function_indices[2]][0] != 'useelectroid':
+            return False
+        if if_indices[1] - else_indices[0] != 1:
+            return False
+        return True
+    return False
