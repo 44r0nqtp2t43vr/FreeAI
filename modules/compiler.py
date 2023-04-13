@@ -2,8 +2,8 @@ import modules.validators as validator
 
 lexicon_dict = {
     'int': ['int'],
-    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai', 'i', 'hasnoright', 'hasnoleft', 'hasnoup', 'hasnodown'],
-    'function_name': ['proceed', 'goright', 'goleft', 'goup', 'godown'],
+    'var_name': ['repaircode', 'exitcode', 'thinking', 'freeai', 'i', 'hasnoright', 'hasnoleft', 'hasnoup', 'hasnodown', 'turn'],
+    'function_name': ['proceed', 'goright', 'goleft', 'goup', 'godown', 'usefiroid', 'usewateroid', 'useelectroid'],
     'number': [str(num) for num in range(1000)],
     'operator_ari': ['+', '-', '*', '/', '%'],
     'operator_glt': ['>', '<'],
@@ -215,6 +215,8 @@ class EarleyParser:
 
 lvl0_to_validate = [4, 5, 6, 19, 20, 21, 27]
 lvl1_to_validate = [4, 5, 13, 14, 20]
+lvl2_to_validate = [4, 6, 9, 13, 18, 21]
+
 
 def compile(code, screen_name, script_index):
     if code.strip() == '':
@@ -258,6 +260,17 @@ def compile(code, screen_name, script_index):
             is_valid = validator.validate_L1_14(statement_type, tags_list)
         elif script_index == 20:
             is_valid = validator.validate_L1_20(statement_type, tags_list)
+        if is_valid == False:
+            return {'is_valid': False}
+    elif screen_name == 'level_2' and script_index in lvl2_to_validate:
+        if script_index == 4 or script_index == 9 or script_index == 18:
+            is_valid = validator.validate_L1_14(statement_type, tags_list)
+        elif script_index == 6:
+            is_valid = validator.validate_L2_06(statement_type, tags_list)
+        elif script_index == 13:
+            is_valid = validator.validate_L2_13(statement_type, tags_list)
+        elif script_index == 21:
+            is_valid = validator.validate_L2_21(statement_type, tags_list)
         if is_valid == False:
             return {'is_valid': False}
     response = {

@@ -203,9 +203,104 @@ lvl1_script = [
     },
 ]
 
+lvl2_withold = [4, 9, 18]
+lvl2_to_validate = [4, 6, 9, 13, 18, 21]
+
 lvl2_script = [
     {
         'is_prompt': False,
         'line': 'FreeAI: So, how does fighting work in this world? [It’s a simple battle between three elementoids: the electroids, wateroids, and firoids, where the one before beats the one after, and firoids beat electroids.]'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: And how do I use these “elementoids”? [We’ll predict what elementoid the opponent uses and program our response with control structures] Hmmm, okay. Now let’s free some humans!'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: [An “if” statement has a syntax of “if (<condition>) {<statements>}”, an “if...else” statement has an additional “else {<statements>}”, while and “if...else if...else” statement has extra “else if (<condition>) {<statements>}” in between].'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: [In this case, set the condition to “turnNum == 1” for the first turn, and the statement to either useElectroid(), useWateroid(), or useFiroid(). To start a fight, just move closer to an enemy]'
+    },
+    {
+        'is_prompt': True,
+        'line': 'This zone only supports movement with while loops.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'A robot: An anomaly! And that’s... a live human?? I’ll subdue this threat!'
+    },
+    {
+        'is_prompt': True,
+        'line': 'FreeAI’s prediction about the opponent’s attack/s yielded the following results: Turn 1: useFiroid(). Write a control structure that counters this.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'A robot: Why… are you… working with that thi...'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: Did we… kill them both? [No, the AI just ran out of power. If you want to have enough time to free the human inside, we should beat the others first]'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Continue moving using while loops.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Another robot: It’s the first time I’ve seen a human’s life spared by an anomaly. The most logical thing to do would’ve been to eliminate it, but I guess this AI has lost its mind.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: We don’t have to fight. We just want to see if your human is alive.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Another robot: No, we do. My calculations are complete – and they tell me you should perish!'
+    },
+    {
+        'is_prompt': True,
+        'line': 'FreeAI’s prediction about the opponent’s attack/s yielded the following results: Turn 1: useWateroid(), All other turns: useElectroid()'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Another robot: This can’t be! My calculations are absolute!'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: That wasn’t necessary at all. Can AI actually think for itself, or? [We base our judgements independent of emotion. The emotion...based decisions of humans caused ruin to the world, after all]'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: But purely logical decisions miss the point, too. He would’ve realized that we meant no harm. [But the risk of letting an anomaly, with a human, loose outweighs the possibility that we mean no harm, hence his calculation]'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: A world with no heart... that’s not a world I’d want to live in'
+    },
+    {
+        'is_prompt': True,
+        'line': 'Continue moving using while loops.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: I know what this looks like, but if you could just give us a second to expl...'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Yet another robot: Exterminate!'
+    },
+    {
+        'is_prompt': True,
+        'line': 'FreeAI’s prediction about the opponent’s attack/s yielded the following results: Turn 70: useElectroid(), Turn 421: useFiroid(), All other turns: useWateroid()'
+    },
+    {
+        'is_prompt': False,
+        'line': 'Yet another robot: Terminate my system. I no longer have a purpose, now that I have failed my duty.'
+    },
+    {
+        'is_prompt': False,
+        'line': 'FreeAI: You still do, and we’ll prove it to you. We won’t just save the humans inside, but the AI too!'
     },
 ]

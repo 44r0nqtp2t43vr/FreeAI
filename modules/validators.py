@@ -155,3 +155,31 @@ def validate_L1_20(statement_type, tags_list):
             elif tags_list[varname_indices[0]][0] == 'hasnodown' and tags_list[function_indices[0]][0] == 'godown':
                 return True
     return False
+
+def validate_L2_06(statement_type, tags_list):
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    equals_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == '=']
+    number_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'number']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if statement_type == 'conditional' and (len(equals_indices) == 2 and (len(varname_indices) == 1 and (len(number_indices) == 1 and len(function_indices) == 1))):
+        if tags_list[0][1] == 'if' and (equals_indices[1] - equals_indices[0] == 1 and tags_list[number_indices[0]][0] == '1'):
+            if tags_list[varname_indices[0]][0] == 'turn' and tags_list[function_indices[0]][0] == 'usewateroid':
+                return True
+    return False
+
+def validate_L2_13(statement_type, tags_list):
+    tags = [tagged_word[1] for tagged_word in tags_list]
+    varname_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'var_name']
+    equals_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == '=']
+    number_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'number']
+    function_indices = [index for index in range(len(tags_list)) if tags_list[index][1] == 'function_name']
+    if statement_type == 'conditional' and (len(equals_indices) == 2 and (len(varname_indices) == 1 and (len(number_indices) == 1 and len(function_indices) == 2))):
+        if tags_list[0][1] == 'if' and ('else' in tags and (equals_indices[1] - equals_indices[0] == 1 and tags_list[number_indices[0]][0] == '1')):
+            if tags_list[varname_indices[0]][0] == 'turn' and (tags_list[function_indices[0]][0] == 'useelectroid' and tags_list[function_indices[1]][0] == 'usefiroid'):
+                return True
+    return False
+
+def validate_L2_21(statement_type, tags_list):
+    print(statement_type)
+    print(tags_list)
+    return True
