@@ -197,6 +197,13 @@ while running:
                 old_psprite_pos = getattr(player_sprite, 'pos')
                 new_psprite_pos = getattr(player_sprite, 'pos')
                 player_sprite_group.draw(screen)
+                prompt = script.lvl2_script[script_index]
+                if script.lvl2_script[script_index]['is_prompt'] == True:
+                    setattr(bpanel_text_input, 'text', '')
+                    setattr(bpanel_text_input, 'active', True)
+                else:
+                    setattr(bpanel_text_input, 'text', 'proceed();')
+                    setattr(bpanel_text_input, 'active', False)
                 justmoved=True
                 # continue
         if justmoved:
@@ -326,18 +333,19 @@ while running:
                         else:
                             sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
                             pygame.mixer.Sound.play(sound)
+                    if script.lvl1_script[script_index]['is_prompt'] == True:
+                        setattr(bpanel_text_input, 'text', '')
+                        setattr(bpanel_text_input, 'active', True)
+                    else:
+                        setattr(bpanel_text_input, 'text', 'proceed();')
+                        setattr(bpanel_text_input, 'active', False)
                 else:
                     script_index = 0
                     star_pos_index = 0
                     screen_name = 'level_2'
                     prompt = script.lvl2_script[script_index]
                     mp.play_music(screen_name)
-                if script.lvl1_script[script_index]['is_prompt'] == True:
-                    setattr(bpanel_text_input, 'text', '')
-                    setattr(bpanel_text_input, 'active', True)
-                else:
-                    setattr(bpanel_text_input, 'text', 'proceed();')
-                    setattr(bpanel_text_input, 'active', False)
+                
             elif screen_name == 'level_2':
                 feedback_block = objs.Object((0, 400), 40, 40, right_block_pic)
                 feedback_block_group = pygame.sprite.Group(feedback_block)
