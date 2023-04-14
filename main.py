@@ -9,11 +9,16 @@ import screens.level_0_screen as l0scr
 import screens.level_1_screen as l1scr
 import screens.level_2_screen as l2scr
 import screens.level_3_screen as l3scr
+import screens.game_over_screen as goscr
+import screens.victory_screen as vtscr
 
 import modules.scripts as script
 import modules.executors as execute
+import modules.music_player as mp
 
 # pygame setup
+pygame.mixer.pre_init()
+pygame.mixer.init()
 pygame.init()
 screen_width = 1280
 screen_height = 720
@@ -23,7 +28,7 @@ clock = pygame.time.Clock()
 
 running = True
 justmoved = False
-screen_name = 'level_3'
+screen_name = 'home'
 script_index = 0
 star_pos_index = 0
 lives = 10
@@ -36,17 +41,30 @@ elif screen_name == 'level_2':
 elif screen_name == 'level_3':
     prompt = script.lvl3_script[script_index]
 
+# music
+mp.play_music(screen_name)
+
 # import screens & components
 home_screen = hmscr.HomeScreen(screen)
 lvl0_screen = l0scr.Level0Screen(screen)
 lvl1_screen = l1scr.Level1Screen(screen)
 lvl2_screen = l2scr.Level2Screen(screen)
 lvl3_screen = l3scr.Level3Screen(screen)
+game_over_screen = goscr.GameOverScreen(screen)
+victory_screen = vtscr.VictoryScreen(screen)
 bottom_panel = btpnl.BottomPanel(screen, lives)
 
 # home group
 home_group = getattr(home_screen, 'home_group')
 home_awaken_button = getattr(home_screen, 'awaken_button')
+
+# game over group
+game_over_group = getattr(game_over_screen, 'game_over_group')
+game_over_return_button = getattr(game_over_screen, 'return_button')
+
+# victory group
+victory_group = getattr(victory_screen, 'victory_group')
+victory_return_button = getattr(victory_screen, 'return_button')
 
 # bottom panel group
 bpanel_group = getattr(bottom_panel, 'bpanel_group')
@@ -66,7 +84,7 @@ lvl3_sprite_group = getattr(lvl3_screen, 'sprite_group')
 # feedback block pics
 right_block_pic = pygame.image.load('assets/images/block_right.png').convert_alpha()
 wrong_block_pic = pygame.image.load('assets/images/block_wrong.png').convert_alpha()
-if screen_name == 'home' or screen_name == 'level_0':
+if screen_name == 'home' or screen_name == 'level_0' or screen_name == 'victory':
     feedback_block = objs.Object((680, 240), 40, 40, wrong_block_pic)
 elif screen_name == 'level_1' or screen_name == 'level_2' or screen_name == 'level_3':
     feedback_block = objs.Object((0, 400), 40, 40, wrong_block_pic)
@@ -74,7 +92,7 @@ feedback_block_group = pygame.sprite.Group(feedback_block)
 
 # player_sprite
 player_sprite_pic = pygame.image.load('assets/images/sprite_freeai.png').convert_alpha()
-if screen_name == 'home' or screen_name == 'level_1' or screen_name == 'level_2':
+if screen_name == 'home' or screen_name == 'level_1' or screen_name == 'level_2' or screen_name == 'victory':
     player_sprite = objs.Object((0, 360), 40, 40, player_sprite_pic)
     player_sprite_group = pygame.sprite.Group(player_sprite)
     old_psprite_pos = getattr(player_sprite, 'pos')
@@ -88,7 +106,7 @@ elif screen_name == 'level_3':
 lvl1_star_pos_list = [(400, 240), (1040, 400), (1160, 40), (1280, 0)]
 lvl2_star_pos_list = [(520, 160), (920, 280), (1160, 40), (1280, 0)]
 lvl3_star_pos_list = [(920, 280), (520, 160), (1280, 0)]
-if screen_name == 'home' or screen_name == 'level_1':
+if screen_name == 'home' or screen_name == 'level_1' or screen_name == 'victory':
     star_pic = pygame.image.load('assets/images/star.png').convert_alpha()
     star = objs.Object(lvl1_star_pos_list[star_pos_index], 40, 40, star_pic)
     star_group = pygame.sprite.Group(star)
@@ -108,7 +126,11 @@ while running:
     for event in event_list:
         if event.type == pygame.QUIT:
             running = False
-    if screen_name == 'home':
+    if screen_name == 'game_over':
+        game_over_group.update(event_list)
+    elif screen_name == 'victory':
+        victory_group.update(event_list)
+    elif screen_name == 'home':
         home_group.update(event_list)
     else:
         if screen_name == 'level_0':
@@ -132,6 +154,19 @@ while running:
         if getattr(home_awaken_button, 'is_clicked') == True:
             setattr(home_awaken_button, 'is_clicked', False)
             screen_name = 'level_0'
+            mp.play_music(screen_name)
+    elif screen_name == 'game_over':
+        game_over_screen.displayGameOverScreen()
+        if getattr(game_over_return_button, 'is_clicked') == True:
+            setattr(game_over_return_button, 'is_clicked', False)
+            screen_name = 'home'
+            mp.play_music(screen_name)
+    elif screen_name == 'victory':
+        victory_screen.displayGameOverScreen()
+        if getattr(victory_return_button, 'is_clicked') == True:
+            setattr(victory_return_button, 'is_clicked', False)
+            screen_name = 'home'
+            mp.play_music(screen_name)
     elif screen_name == 'level_0':
         lvl0_screen.displayLevel0Screen()
         bottom_panel.displayBottomPanel()
@@ -228,6 +263,8 @@ while running:
                     feedback_block_group = pygame.sprite.Group(feedback_block)
                     feedback_block_group.draw(screen)
                     screen_name = 'level_1'
+                    prompt = script.lvl1_script[script_index]
+                    mp.play_music(screen_name)
                 if script.lvl0_script[script_index]['is_prompt'] == True:
                     setattr(bpanel_text_input, 'text', '')
                     setattr(bpanel_text_input, 'active', True)
@@ -245,31 +282,56 @@ while running:
                             new_psprite_pos = execute.executeForLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
                             if old_psprite_pos == new_psprite_pos:
                                 lives = lives - 1
+                                sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                                pygame.mixer.Sound.play(sound)
+                            else:
+                                sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                                pygame.mixer.Sound.play(sound)
                         elif script_index == script.lvl1_to_validate[2]:
                             old_psprite_pos = getattr(player_sprite, 'pos')
                             new_psprite_pos = execute.executeWhileLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
                             if old_psprite_pos == new_psprite_pos:
                                 lives = lives - 1
+                                sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                                pygame.mixer.Sound.play(sound)
+                            else:
+                                sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                                pygame.mixer.Sound.play(sound)
                         script_index = script_index + 1
                     elif script_index == script.lvl1_withold[0]:
                         old_psprite_pos = getattr(player_sprite, 'pos')
                         new_psprite_pos = execute.executeForLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
                         if old_psprite_pos == new_psprite_pos:
                             lives = lives - 1
+                            sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                            pygame.mixer.Sound.play(sound)
+                        else:
+                            sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                            pygame.mixer.Sound.play(sound)
                     elif script_index == script.lvl1_withold[1]:
                         old_psprite_pos = getattr(player_sprite, 'pos')
                         new_psprite_pos = execute.executeWhileLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
                         if old_psprite_pos == new_psprite_pos:
                             lives = lives - 1
+                            sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                            pygame.mixer.Sound.play(sound)
+                        else:
+                            sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                            pygame.mixer.Sound.play(sound)
                     elif script_index == script.lvl1_withold[2]:
                         old_psprite_pos = getattr(player_sprite, 'pos')
                         new_psprite_pos = execute.executeWhileLoop(bpanel_run_button_response, old_psprite_pos, lvl1_block_group, lvl1_sprite_group)
                         if old_psprite_pos == new_psprite_pos:
                             lives = lives - 1
+                        else:
+                            sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                            pygame.mixer.Sound.play(sound)
                 else:
                     script_index = 0
                     star_pos_index = 0
                     screen_name = 'level_2'
+                    prompt = script.lvl2_script[script_index]
+                    mp.play_music(screen_name)
                 if script.lvl1_script[script_index]['is_prompt'] == True:
                     setattr(bpanel_text_input, 'text', '')
                     setattr(bpanel_text_input, 'active', True)
@@ -282,12 +344,20 @@ while running:
                 feedback_block_group.draw(screen)
                 if script_index < len(script.lvl2_script) - 1:
                     if script_index not in script.lvl2_withold:
+                        if script.lvl2_script[script_index]['is_prompt'] == True:
+                            sound = pygame.mixer.Sound("assets/sfx/laser2.ogg")
+                            pygame.mixer.Sound.play(sound)
                         script_index = script_index + 1
                     else:
                         old_psprite_pos = getattr(player_sprite, 'pos')
                         new_psprite_pos = execute.executeWhileLoop(bpanel_run_button_response, old_psprite_pos, lvl2_block_group, lvl2_sprite_group)
                         if old_psprite_pos == new_psprite_pos:
                             lives = lives - 1
+                            sound = pygame.mixer.Sound("assets/sfx/phaserDown1.ogg")
+                            pygame.mixer.Sound.play(sound)
+                        else:
+                            sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                            pygame.mixer.Sound.play(sound)
                     if script.lvl2_script[script_index]['is_prompt'] == True:
                         setattr(bpanel_text_input, 'text', '')
                         setattr(bpanel_text_input, 'active', True)
@@ -298,18 +368,28 @@ while running:
                     script_index = 0
                     star_pos_index = 0
                     screen_name = 'level_3'
+                    prompt = script.lvl3_script[script_index]
+                    mp.play_music(screen_name)
             elif screen_name == 'level_3':
                 feedback_block = objs.Object((0, 400), 40, 40, right_block_pic)
                 feedback_block_group = pygame.sprite.Group(feedback_block)
                 feedback_block_group.draw(screen)
                 if script_index < len(script.lvl3_script) - 1:
                     if script_index not in script.lvl3_withold:
+                        if script.lvl3_script[script_index]['is_prompt'] == True:
+                            sound = pygame.mixer.Sound("assets/sfx/powerUp2.ogg")
+                            pygame.mixer.Sound.play(sound)
                         script_index = script_index + 1
                     else:
                         old_psprite_pos = getattr(player_sprite, 'pos')
                         new_psprite_pos = execute.executeWhileLoop(bpanel_run_button_response, old_psprite_pos, lvl3_block_group, lvl3_sprite_group)
                         if old_psprite_pos == new_psprite_pos:
                             lives = lives - 1
+                            sound = pygame.mixer.Sound("assets/sfx/phaserDown1.ogg")
+                            pygame.mixer.Sound.play(sound)
+                        else:
+                            sound = pygame.mixer.Sound("assets/sfx/lowThreeTone.ogg")
+                            pygame.mixer.Sound.play(sound)
                     if script.lvl3_script[script_index]['is_prompt'] == True:
                         setattr(bpanel_text_input, 'text', '')
                         setattr(bpanel_text_input, 'active', True)
@@ -319,7 +399,18 @@ while running:
                 else:
                     script_index = 0
                     star_pos_index = 0
+                    lives = 10
+                    feedback_block = objs.Object((680, 240), 40, 40, wrong_block_pic)
+                    feedback_block_group = pygame.sprite.Group(feedback_block)
+                    prompt = script.lvl0_script[script_index]
+                    if script.lvl1_script[script_index]['is_prompt'] == True:
+                        setattr(bpanel_text_input, 'text', '')
+                        setattr(bpanel_text_input, 'active', True)
+                    else:
+                        setattr(bpanel_text_input, 'text', 'proceed();')
+                        setattr(bpanel_text_input, 'active', False)
                     screen_name = 'victory'
+                    mp.play_music(screen_name)
             # pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(40, 40, 40, 40))
         else:
             if screen_name == 'level_0':
@@ -331,8 +422,23 @@ while running:
                 feedback_block_group = pygame.sprite.Group(feedback_block)
                 feedback_block_group.draw(screen)
             lives = lives - 1
+            sound = pygame.mixer.Sound("assets/sfx/phaserDown1.ogg")
+            pygame.mixer.Sound.play(sound)
             if lives == 0:
+                script_index = 0
+                star_pos_index = 0
+                lives = 10
+                feedback_block = objs.Object((680, 240), 40, 40, wrong_block_pic)
+                feedback_block_group = pygame.sprite.Group(feedback_block)
+                prompt = script.lvl0_script[script_index]
+                if script.lvl1_script[script_index]['is_prompt'] == True:
+                    setattr(bpanel_text_input, 'text', '')
+                    setattr(bpanel_text_input, 'active', True)
+                else:
+                    setattr(bpanel_text_input, 'text', 'proceed();')
+                    setattr(bpanel_text_input, 'active', False)
                 screen_name = 'game_over'
+                mp.play_music(screen_name)
             # pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(40, 40, 40, 40))
         bpanel_run_button_response = setattr(bpanel_run_button, 'res', None)
     else: 

@@ -48,6 +48,9 @@ class HomeButton(Button):
                 mouse_pos = pygame.mouse.get_pos()
                 if self.rect.collidepoint(mouse_pos):
                     self.is_clicked = True
+                    click_sound = pygame.mixer.Sound("assets/sfx/switch15.ogg")
+                    pygame.mixer.Sound.play(click_sound)
+                    pygame.mixer.music.stop()
                     self.render_button()
 
 class RunButton(Button):
@@ -74,4 +77,6 @@ class RunButton(Button):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if collidepoint(mouse_pos):
+                    click_sound = pygame.mixer.Sound("assets/sfx/switch15.ogg")
+                    pygame.mixer.Sound.play(click_sound)
                     self.res = comp.compile(self.code, self.screen_name[0], self.script_index[0])
