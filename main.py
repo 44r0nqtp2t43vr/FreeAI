@@ -28,7 +28,7 @@ clock = pygame.time.Clock()
 
 running = True
 justmoved = False
-screen_name = 'home'
+screen_name = 'level_3'
 script_index = 0
 star_pos_index = 0
 lives = 10
@@ -419,6 +419,10 @@ while running:
                         setattr(bpanel_text_input, 'active', False)
                     screen_name = 'victory'
                     mp.play_music(screen_name)
+                    player_sprite = objs.Object((0, 360), 40, 40, player_sprite_pic)
+                    player_sprite_group = pygame.sprite.Group(player_sprite)
+                    old_psprite_pos = getattr(player_sprite, 'pos')
+                    new_psprite_pos = getattr(player_sprite, 'pos')
             # pygame.draw.rect(screen, (0, 153, 0), pygame.Rect(40, 40, 40, 40))
         else:
             if screen_name == 'level_0':
@@ -447,6 +451,10 @@ while running:
                     setattr(bpanel_text_input, 'active', False)
                 screen_name = 'game_over'
                 mp.play_music(screen_name)
+                player_sprite = objs.Object((0, 360), 40, 40, player_sprite_pic)
+                player_sprite_group = pygame.sprite.Group(player_sprite)
+                old_psprite_pos = getattr(player_sprite, 'pos')
+                new_psprite_pos = getattr(player_sprite, 'pos')
             # pygame.draw.rect(screen, (204, 0, 0), pygame.Rect(40, 40, 40, 40))
         bpanel_run_button_response = setattr(bpanel_run_button, 'res', None)
     else: 

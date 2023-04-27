@@ -43,7 +43,7 @@ class BottomPanel():
         prompt_line = prompt['line']
 
         prompt_text_font = pygame.font.Font('assets/fonts/KenneyMiniSquareMono.ttf', 12)
-        prompt_text = text.MultilineText((self.screen_width//8)*3, ((self.screen_height//3)//8)*5, 320, 180, prompt_text_font, prompt_line, (24, 139, 188))
+        prompt_text = text.MultilineText((self.screen_width//8)*3, ((self.screen_height//3)//8)*5, 320, 180, prompt_text_font, prompt_line, (0, 0, 0))
         avatars = []
         for i in range(lives):
             if i < 5:
