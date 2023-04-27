@@ -28,7 +28,7 @@ clock = pygame.time.Clock()
 
 running = True
 justmoved = False
-screen_name = 'level_3'
+screen_name = 'home'
 script_index = 0
 star_pos_index = 0
 lives = 10
